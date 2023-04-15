@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package kvstore;
+
+service KVStore {
+  rpc Get(GetReq) returns (GetResp) {}
+  rpc Scan(ScanReq) returns (stream ScanResp) {}
+  rpc Put(PutReq) returns (PutResp) {}
+  rpc Delete(DeleteReq) returns (DeleteResp) {}
+  rpc Warmup(WarmupReq) returns (WarmupResp) {}
+}
+
+enum ErrorCode {
+  OK = 0;
+  CLIENT_ERROR = 1;
+  SERVER_ERROR = 2;
+}
+
+message Status {
+  ErrorCode error_code = 1;
+  optional bytes error_msg = 2;
+}
+
+message KV {
+  bytes key = 1;
+  bytes value = 2;
+}
+
+message GetReq {
+  bytes key = 1;
+}
+
+message GetResp {
+  bytes value = 1;
+  Status status = 2;
+}
+
+message ScanReq {
+  optional bytes start = 1;
+  optional uint32 limit = 2;
+}
+
+message ScanResp {
+  KV kv = 1;
+}
+
+message PutReq {
+  KV kv = 1;
+}
+
+message PutResp {
+  Status status = 2;
+}
+
+message DeleteReq {
+  bytes key = 1;
+}
+
+message DeleteResp {
+  Status status = 2;
+}
+
+message WarmupReq {
+  bytes data = 1;
+  int32 resp_size = 2;
+}
+
+message WarmupResp {
+  bytes data = 1;
+}

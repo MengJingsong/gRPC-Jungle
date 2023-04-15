@@ -1,0 +1,3 @@
+recordcount=100000
+operationcount=100000
+threadcount=1
